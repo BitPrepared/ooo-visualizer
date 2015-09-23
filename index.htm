@@ -4,36 +4,189 @@
 	<title>Verifica Indaba 2015</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<style>
+	.affix {
+		top: 0;
+	    width: 100%;
+	}
+	.affix + .container-fluid {
+	    padding-top: 70px;
+	}
+	
+	.img-attached {
+		width: 300px;
+	}
+	
+	#verifies {
+		width: 900px;
+	}
+	
+	</style>
 
 	<script type="text/javascript">
+	
+	var TEXT_PREVIEW_LENGTH = 200;
+	
 	$(document).ready(function() {
         $("#progress-load-contents").fadeIn();
+        
         $.ajax({
-        	url: "http://ncorti.com/data.json",
+        	url: "data.json",
         	type: "GET",
         	dataType: "json",
-        	success: function(result){
+        	success: function(data,textStatus,jqXHR){
             	$("#progress-load-contents").fadeOut("slow");
-
+            	
+            	var v = data.verifies;
+            	var i;
+            	for( i in v){
+            		
+            		var new_el = $('<li>');
+            		new_el.addClass("list-group-item");
+            		
+            		if(v[i].text != ""){
+            			var quote = $('<blockquote>');
+            			
+            			var beforeQuote = v[i].text.slice(0,TEXT_PREVIEW_LENGTH);
+            			var beforeQuoteEl = $("<p>").text(beforeQuote);
+            			quote.append(beforeQuoteEl);
+            			
+            			if(v[i].text.length > TEXT_PREVIEW_LENGTH){
+            				
+            				beforeQuoteEl.text(beforeQuoteEl.text() + "...");
+            				
+            				var more = $("<div id=\"more-"+ v[i].id+"\">");
+            				
+            				more.text("..." + v[i].text.slice(TEXT_PREVIEW_LENGTH + 1));
+            			
+            				more.addClass("collapse");
+            				
+            				quote.append(more);	
+	            			
+	            			quote.append($("<button>", {
+	            				type: "button",
+	            				"class" : "btn btn-info btn-xs",
+	            				"data-toggle": "collapse",
+	            				"data-target": "#more-" + v[i].id,
+	            				"text" : "Continua a leggere"
+	            				
+	            			}));
+            			}
+            			
+            			var cd = new Date(v[i].created);
+            			
+            			quote.append($("<footer>", {
+            				text : 
+            				cd.toLocaleTimeString() + " " + cd.toLocaleDateString() 
+            				+ " - From " + v[i].sourceLabel
+            			}));
+            			new_el.append(quote);
+            		}
+            		
+            		/* ***  Per il momento l'HTML è disabilitato *** */
+            		
+            		/*if(v[i].textHtml != ""){
+            			var content = $('<div>',{
+            				html : v[i].textHtml
+            			});
+            			new_el.append(content);	
+            		}*/
+            		
+            		/* Inseriamo gli hashtags */
+            		var new_ht;
+            		var h;
+            		var hashtagsContainer = $("<p class=\"hashtag-container\">")
+            		for(h = 0; h < v[i].hashtags.length; h++){
+            			new_ht = $('<span>');
+            			new_ht.addClass("label");
+            			new_ht.addClass("label-info");
+            			new_ht.text(v[i].hashtags[h]);
+            			
+            			hashtagsContainer.append(new_ht);
+            		}
+            		new_el.append(hashtagsContainer)
+            		
+            		/* Inserisci l'immagine */
+            		for(h = 0; h < v[i].attachments.length; h++){
+            			new_el.append($("<img>", {
+            				"class" : "img-thumbnail img-responsive img-attached",
+            				"src" : v[i].attachments[h].fileName
+            			}));
+            		}
+            		
+            		/* Salviamogli il JSON, per ridondanza */ 
+            		new_el.original_json = v[i];
+            		
+            		/* Inserisci l'update */
+            		$('#verifies').prepend(new_el);
+            	}
         	}
         });
     });
+    
 	</script>
 </head>
-
 <body>
-	<div class="container">
-		<div class="jumbotron">
-			<h1>Verifica Indaba 2015</h1> 
-			<p>Benvenuto alla pagina di verifica dell'Indaba Agesci 2015</p> 
+	<nav class="navbar navbar-inverse navbar-fixed-top affix">
+		<div class="container-fluid">
+		<div class="navbar-header">
+	      <a class="navbar-brand" href="#">
+	        <img src="logo.png" height="100%" align="left"/>  AGESCI Indaba 2015
+	      </a>
+	    </div>
+		</div>
+	</nav>
+	
+	<div class="container-fluid">
+		<div id="success-update-alert" class="alert alert-success alert-dismissible" style="display:none" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			Contenuti aggiornati <span class="glyphicon glyphicon-ok"/>
 		</div>
 		<div class="progress progress-striped active" style="display:none" id="progress-load-contents">
 			<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Caricamento contenuti...
 			</div>
 		</div>
-	</div>
+  		<ul id="verifies" class="list-group">
+  			
+    		<li class="list-group-item update">
+    			<blockquote>
+    			<p>Descrizione elemento...</p>
+    			<footer>15:18 18/09/2015 - From Twitter</footer>
+    			</blockquote>
+    		<p><span class="label label-info">#hashtag1</span>
+    		<span class="label label-info">#hashtag2</span>
+    		<span class="label label-info">#hashtag3</span>
+    		<span class="label label-info">#hashtag4</span>
+    		<span class="label label-info">#hashtag5</span></p>
+    		<img src="sample.jpg" class="img-thumbnail" alt="Sample image" width="304" height="236">
+    		</li>
+    		
+    		<li class="list-group-item update">
+    			<blockquote>
+    			<p>A me questo Indaba e' piaciuto tanto perche'...</p>
+    			<div id="more" class="collapse">
+    			<p>
+    			...lorem ipsum dolor sit amet, consectetur adipisicing elit,
+    			sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    			</p>
+  				</div>
+    			<button type="button" class="btn btn-info btn-xs" data-toggle="collapse" data-target="#more">Continua a leggere</button>
+    			<footer>15:18 18/09/2015 - From Twitter</footer>
+    			</blockquote>
+    		<p><span class="label label-info">#hashtag1</span>
+    		<span class="label label-info">#hashtag2</span>
+    		<span class="label label-info">#hashtag3</span>
+    		<span class="label label-info">#hashtag4</span>
+    		<span class="label label-info">#hashtag5</span></p>
+  			<img src="sample.jpg" class="img-thumbnail img-responsive" alt="Sample image" width="300">
+  			</li>
+  		</ul>
+		</div>
+</div>
 </body>
 </html>
