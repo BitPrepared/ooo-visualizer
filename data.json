@@ -1,0 +1,38 @@
+{
+  "verifies": [ {
+    "id": "1",
+    "text": "prova",
+    "textHtml": "prova<br\/>",
+    "hashtags": [
+      "pippo",
+      "pluto"
+    ],
+    "sourceLabel": "Email",
+    "deleted": false,
+    "created": "2015-09-23T20:20:59+0200",
+    "attachments": [
+      {
+        "id": "1",
+        "fileName": "prova.jpg"
+      }
+    ]
+  } , {
+    "id": "2",
+    "text": "test2",
+    "textHtml": "test2<br\/>",
+    "hashtags": [
+      "pinco",
+      "pallino"
+    ],
+    "sourceLabel": "Twitter",
+    "deleted": false,
+    "created": "2015-09-23T20:21:29+0200",
+    "attachments": [
+      {
+        "id": "2",
+        "fileName": "test2.jpg"
+      }
+    ]
+  }
+  ] 
+}
