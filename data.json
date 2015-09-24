@@ -1,8 +1,8 @@
 {
   "verifies": [ {
     "id": "1",
-    "text": "prova",
-    "textHtml": "prova<br\/>",
+    "text": "prova TESTO",
+    "textHtml": "prova TESTO HTML <br\/>",
     "hashtags": [
       "pippo",
       "pluto"
@@ -18,8 +18,8 @@
     ]
   } , {
     "id": "2",
-    "text": "test2",
-    "textHtml": "test2<br\/>",
+    "text": "test2 TESTO",
+    "textHtml": "test2 TESTO HTML <br\/>",
     "hashtags": [
       "pinco",
       "pallino"
@@ -30,7 +30,24 @@
     "attachments": [
       {
         "id": "2",
-        "fileName": "test2.jpg"
+        "fileName": "logo.png"
+      }
+    ]
+  }, {
+    "id": "2",
+    "text": "test2 TESTO moassdlfkjh sdfhasdkjh asdkfjhskd ksdhf skdjfh skh sdkjfh sdjh dfs sdfj sdkh sdfkjhs dk sdkf ksd fksdhf ksdjhf kdfgh a aksjdhf kas fkjashdf kjs dfkasjh sdjhf skjsdh ksdjh ssjklòjsdfkl skfsd alsknl sdflkj slfku lks flks dlkjs li slk jsdifj lksjd flkjs dlksjdflkj slkskj sdflkj sdlkj sldjf lks fljsa lkj sdflkj aslkdj sldkjf lkjsa dlkjsdjf lkajs dkljs  lskjdf lkasjd kljs dflkjasd flkj sadflkjsa dlkj sdfljk saflk sldkfj sk lasdj sakdj flksjd flkjs vjsd vlksdc lasjc lksjd lksajdbflkj sdc dkjf skjhds ksdjh f",
+    "textHtml": "test2 TESTO HTML <br\/>",
+    "hashtags": [
+      "pinco",
+      "pallino"
+    ],
+    "sourceLabel": "Twitter",
+    "deleted": false,
+    "created": "2015-09-23T20:21:29+0200",
+    "attachments": [
+      {
+        "id": "2",
+        "fileName": "sample.jpg"
       }
     ]
   }
