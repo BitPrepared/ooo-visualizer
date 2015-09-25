@@ -75,7 +75,7 @@
 		if(MAX_ID < uobj.id){
 			MAX_ID = uobj.id;
 		}
-            		
+		
 		if(MIN_ID > uobj.id) {
 			MIN_ID = uobj.id;
 		}
@@ -102,7 +102,7 @@
 			}));
 		}
 		new_el.append(hashtagsContainer)
-            		
+		
             		/* Inserisci l'immagine */
             		for(h = 0; h < uobj.attachments.length; h++){
             			new_el.append($("<img>", {
@@ -131,6 +131,7 @@
 			
 			// la risorsa è da configurare nel file config.js
 			var res = API_RES_POST + last_id;
+
 			if(last_id != 0){
 				// var res = res + last_id;	
 			}
