@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Verifica Indaba 2015</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="config.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="lib/base.css">
+	<link rel="stylesheet" href="ooo-vis.css">
+</head>
+<body>
+<div id="ptr">
+  <!-- Pull down arrow indicator -->
+  <span class="genericon genericon-next"></span>
+
+  <!-- CSS-based loading indicator -->
+  <div class="loading">
+    <span id="l1"></span>
+    <span id="l2"></span>
+    <span id="l3"></span>
+  </div>
+</div>
+<div id="content">
+	<nav class="navbar navbar-inverse navbar-fixed-top affix">
+		<div class="container-fluid">
+		<div class="navbar-header">
+	      <a class="navbar-brand" href="#">
+	        <img src="logo.png" height="100%" align="left"/><strong>AGESCI Indaba 2015</strong>
+	      </a>
+	    </div>
+		</div>
+	</nav>
+	
+	<div class="container-fluid" id="content-container">
+		<div class="progress progress-striped active" style="display:none" id="progress-load-contents">
+			<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Caricamento nuovi contenuti...
+			</div>
+		</div>
+  		<ul id="verifies" class="list-group">
+  			<li class="list-group-item update" id="stub-info-element">
+  			    <blockquote>
+    			<h2>Invia la tua verifica!</h2>
+    			<p>Le verifiche dei vari capi che hanno partecipato all'Indaba appariranno in questa sezione in automatico.</p>
+    			<footer>BitPrepared</footer>
+    			</blockquote>
+    			<form action="/annotation/new" method="post" accept-charset="UTF-8" autocomplete="off">
+    	<label for="sezione">Sezione:</label> 
+    	<select name="sezione">
+		  <option value="A">A</option>
+		  <option value="B">B</option>
+		</select>
+		<br/>
+		<label for="valutazione">Evento</label>
+    	<select name="valutazione">
+		  <option value="1">1</option>
+		  <option value="2">2</option>
+		</select>
+		<br/>
+		<label for="valutazione">Valutazione</label>
+    	<input type="text" name="valutazione" autocorrect="off" autocapitalize="off" placeholder="A00+++" /> 
+    	<br/>
+		<label for="commento">Commento</label>
+		<br/>
+    	<textarea name="commento" rows="8"></textarea>
+    </form>
+  			</li>
+  		</ul>
+		</div>
+</div>
+  <script src="lib/hammer.2.0.4.js"></script>
+	<script src="lib/wptr.1.1.js"></script>
+
+	<script>
+	  window.onload = function() {
+	    WebPullToRefresh.init( {
+	      loadingFunction: exampleLoadingFunction
+	    } );
+	  };
+
+  	var exampleLoadingFunction = function() {
+			return new Promise( function( resolve, reject ) {
+				load_new_updates(MAX_ID);
+				if (true) {
+						show_success_message();
+				    resolve();
+				} else {
+				    reject();
+				}
+				
+			});
+		};
+	</script>
+</body>
+</html>

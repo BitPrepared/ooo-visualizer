@@ -5,144 +5,109 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="config.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="lib/base.css">
-
-	<style>
-	.affix {
-		top: 0;
-	    width: 100%;
-	}
-	.affix + .container-fluid {
-	    padding-top: 70px;
-	}
+	<link rel="stylesheet" href="ooo-vis.css">
 	
-	.img-attached {
-		width: 300px;
-	}
-
-	@font-face {
-    font-family: Humanist;
-    src: url('font/Humanist 521 Light BT.ttf');
-	}
-	
-	@font-face {
-    font-family: Humanist-Bold;
-    src: url('font/Humanist 521 Bold Condensed BT.ttf');
-	}
-	
-	body {
-		font-family : Humanist;
-	}
-	
-	li > p {
-		font-size:35pt;
-	}
-	
-	.hashtag-container {
-		font-size: 18px;
-	}
-	
-	.label {
-		font-size: 10pt;
-		margin: 5px;
-	}
-	
-	nav {
-		font-family: Humanist-Bold;
-	}
-	
-	</style>
-
 	<script type="text/javascript">
 	
-	var TEXT_PREVIEW_LENGTH = 200;
-	var MS_RELOAD_DELAY = 10000;
+	if ( typeof TEXT_PREVIEW_LENGTH === 'undefined' ) {
+		alert("Attenzione: crea il file config.js a partire "+
+		"dal config.js.sample prima di poter utilizzare " + 
+		"ooo-visualizer");
+	}
+	
 	var MAX_ID = 0;
+
 	var MIN_ID = 0;
+	
+	function set_text (uobj, new_el) {
+		if(uobj.text != ""){
+			var quote = $('<blockquote>');
+			
+			var beforeQuote = uobj.text.slice(0,TEXT_PREVIEW_LENGTH);
+			var beforeQuoteEl = $("<p>").text(beforeQuote);
+			quote.append(beforeQuoteEl);
+			
+			if(uobj.text.length > TEXT_PREVIEW_LENGTH){
+				
+				beforeQuoteEl.text(beforeQuoteEl.text() + "...");
+				
+				var more = $("<div id=\"more-"+ uobj.id+"\">");
+				
+				more.text("..." + uobj.text.slice(TEXT_PREVIEW_LENGTH + 1));
+			
+				more.addClass("collapse");
+				
+				quote.append(more);	
+    			
+    			quote.append($("<button>", {
+    				type: "button",
+    				"class" : "btn btn-link btn-xs",
+    				"data-toggle": "collapse",
+    				"data-target": "#more-" + uobj.id,
+    				"text" : "Continua a leggere"
+    				
+    			}));
+			}
+			
+			var cd = new Date(uobj.created);
+			
+			quote.append($("<footer>", {
+				text : 
+				cd.toLocaleTimeString() + " " + cd.toLocaleDateString() 
+				+ " - From " + uobj.sourceLabel
+			}));
+			new_el.append(quote);
+		}
+	}
 	
 	function create_new_update( uobj ) {
 	
-	var new_el = $('<li>');
-            		new_el.addClass("list-group-item");
-            		new_el.attr("display", "none");
+		var new_el = $('<li>', {
+			'class' : "list-group-item"
+		});
+      
+        new_el.hide();
             		
-            		if(MAX_ID < uobj.id){
-            			MAX_ID = uobj.id;
-            		}
+		if(MAX_ID < uobj.id){
+			MAX_ID = uobj.id;
+		}
             		
-            		if(MIN_ID > uobj.id) {
-            			MIN_ID = uobj.id;
-            		}
+		if(MIN_ID > uobj.id) {
+			MIN_ID = uobj.id;
+		}
+        
+        set_text(uobj, new_el);
+        
+		/* ***  Per il momento l'HTML è disabilitato *** */
+		
+		/*if(v[i].textHtml != ""){
+			var content = $('<div>',{
+				html : v[i].textHtml
+			});
+			new_el.append(content);	
+		}*/
             		
-            		if(uobj.text != ""){
-            			var quote = $('<blockquote>');
-            			
-            			var beforeQuote = uobj.text.slice(0,TEXT_PREVIEW_LENGTH);
-            			var beforeQuoteEl = $("<p>").text(beforeQuote);
-            			quote.append(beforeQuoteEl);
-            			
-            			if(uobj.text.length > TEXT_PREVIEW_LENGTH){
-            				
-            				beforeQuoteEl.text(beforeQuoteEl.text() + "...");
-            				
-            				var more = $("<div id=\"more-"+ uobj.id+"\">");
-            				
-            				more.text("..." + uobj.text.slice(TEXT_PREVIEW_LENGTH + 1));
-            			
-            				more.addClass("collapse");
-            				
-            				quote.append(more);	
-	            			
-	            			quote.append($("<button>", {
-	            				type: "button",
-	            				"class" : "btn btn-info btn-xs",
-	            				"data-toggle": "collapse",
-	            				"data-target": "#more-" + uobj.id,
-	            				"text" : "Continua a leggere"
-	            				
-	            			}));
-            			}
-            			
-            			var cd = new Date(uobj.created);
-            			
-            			quote.append($("<footer>", {
-            				text : 
-            				cd.toLocaleTimeString() + " " + cd.toLocaleDateString() 
-            				+ " - From " + uobj.sourceLabel
-            			}));
-            			new_el.append(quote);
-            		}
-            		
-            		/* ***  Per il momento l'HTML è disabilitato *** */
-            		
-            		/*if(v[i].textHtml != ""){
-            			var content = $('<div>',{
-            				html : v[i].textHtml
-            			});
-            			new_el.append(content);	
-            		}*/
-            		
-            		/* Inseriamo gli hashtags */
-            		var new_ht;
-            		var h;
-            		var hashtagsContainer = $("<p class=\"hashtag-container\">")
-            		for(h = 0; h < uobj.hashtags.length; h++){
-            			new_ht = $('<span>');
-            			new_ht.addClass("label");
-            			new_ht.addClass("label-info");
-            			new_ht.text(uobj.hashtags[h]);
-            			
-            			hashtagsContainer.append(new_ht);
-            		}
-            		new_el.append(hashtagsContainer)
+		/* Inseriamo gli hashtags */
+		var new_ht;
+		var h;
+		var hashtagsContainer = $("<p class=\"hashtag-container\">")
+		for(h = 0; h < uobj.hashtags.length; h++){
+			hashtagsContainer.append($('<span>', {
+				'class' : "label label-primary",
+				'text' : uobj.hashtags[h]
+			}));
+		}
+		new_el.append(hashtagsContainer)
             		
             		/* Inserisci l'immagine */
             		for(h = 0; h < uobj.attachments.length; h++){
             			new_el.append($("<img>", {
             				"class" : "img-thumbnail img-responsive img-attached",
-            				"src" : uobj.attachments[h].fileName
+            				"src" : API_RES_IMGS + uobj.attachments[h].fileName
             			}));
             		}
             		
@@ -158,17 +123,16 @@
 		if(where == 'pre'){
 			/* Carica i vecchi messaggi dell'infinite scrolling */
 			
-			var res = 'data.json';
-			
-			// todo inserire vera risorsa tipo
-			// var res = "feed/pre/" + last_id;
+			// la risorsa è da configurare nel file config.js
+			var res = API_RES_PRE + last_id;
 			
 		} else {
 			/* Carica i nuovi messaggi in cima alla pagina */
 			
-			var res = 'data.json';
+			// la risorsa è da configurare nel file config.js
+			var res = API_RES_POST + last_id;
 			if(last_id != 0){
-				// var res = "feed/" + last_id;	
+				// var res = res + last_id;	
 			}
 		}
 		
@@ -183,7 +147,7 @@
             		$("#progress-load-contents").fadeOut("slow");
             	}
             	
-            	var v = data.verifies;
+            	var v = data;
             	var i;
             	for( i = 0; i < v.length; i++){
             		
@@ -196,8 +160,11 @@
             			$('#verifies').prepend(el);	
             		}
             		
-            		el.fadeIn("slow");
-            		
+            		$("#stub-info-element").remove();
+            		el.fadeIn({
+            			queue : true,
+            			duration : "slow"
+            		});
             	}
         	}
         });
@@ -227,12 +194,12 @@
         // load_new_updates(0);
         $(window).scroll(function() {
 				   if($(window).scrollTop() + $(window).height() == $(document).height()) {
-				       load_new_updates(0, pre);
+				       load_new_updates(0, 'pre');
 				   }
 			});
 			setInterval(function(){
 					$("#progress-load-contents").fadeIn();
-					load_new_updates(MAX_ID);
+					load_new_updates(MAX_ID, "post");
 					$("#progress-load-contents").fadeOut("slow");
 			}, MS_RELOAD_DELAY)
     });
@@ -268,39 +235,12 @@
 			</div>
 		</div>
   		<ul id="verifies" class="list-group">
-  			
-    		<li class="list-group-item update">
+  			<li class="list-group-item update" id="stub-info-element">
     			<blockquote>
-    			<p>Descrizione elemento...</p>
-    			<footer>15:18 18/09/2015 - From Twitter</footer>
+    			<h2>Benvenuto sull'aggregatore delle verifiche!</h2>
+    			<p>Le verifiche dei vari capi che hanno partecipato all'Indaba appariranno in questa sezione in automatico.</p>
+    			<footer>BitPrepared</footer>
     			</blockquote>
-    		<p class="hashtag-container"><span class="label label-info">#hashtag1</span>
-    		<span class="label label-info">#hashtag2</span>
-    		<span class="label label-info">#hashtag3</span>
-    		<span class="label label-info">#hashtag4</span>
-    		<span class="label label-info">#hashtag5</span></p>
-    		<img src="sample.jpg" class="img-thumbnail" alt="Sample image" width="304" height="236">
-    		</li>
-    		
-    		<li class="list-group-item update">
-    			<blockquote>
-    			<p>A me questo Indaba e' piaciuto tanto perche'...</p>
-    			<div id="more" class="collapse">
-    			<p>
-    			...lorem ipsum dolor sit amet, consectetur adipisicing elit,
-    			sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    			</p>
-  				</div>
-    			<button type="button" class="btn btn-info btn-xs" data-toggle="collapse" data-target="#more">Continua a leggere</button>
-    			<footer>15:18 18/09/2015 - From Twitter</footer>
-    			</blockquote>
-    		<p class="hashtag-container"><span class="label label-info">#hashtag1</span>
-    		<span class="label label-info">#hashtag2</span>
-    		<span class="label label-info">#hashtag3</span>
-    		<span class="label label-info">#hashtag4</span>
-    		<span class="label label-info">#hashtag5</span></p>
-  			<img src="sample.jpg" class="img-thumbnail img-responsive" alt="Sample image" width="300">
   			</li>
   		</ul>
 		</div>
