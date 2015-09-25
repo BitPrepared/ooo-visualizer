@@ -70,15 +70,21 @@
 		var new_el = $('<li>', {
 			'class' : "list-group-item"
 		});
-      
         new_el.hide();
-            		
-		if(MAX_ID < uobj.id){
-			MAX_ID = uobj.id;
+
+        // Stampa ID *** Solo per debug
+        // new_el.append($('<p><h3>ID ' + uobj.id + ' </h3></p>'));
+
+        var id = parseInt(uobj.id);
+		if(MAX_ID < id){
+			// Inizializzo MIN_ID al primo ID visitato
+			if (MAX_ID == 0 && MIN_ID == 0)
+				MIN_ID = id;
+
+			MAX_ID = id;
 		}
-		
-		if(MIN_ID > uobj.id) {
-			MIN_ID = uobj.id;
+		if(MIN_ID > id) {
+			MIN_ID = id;
 		}
         
         set_text(uobj, new_el);
@@ -153,26 +159,35 @@
             	var v = data;
             	var i;
             	
+            	console.log(v.length + " where " + where + " res " + res);
+
             	if (where == 'pre'){
             		for( i = 0; i < v.length; i++){
             			var el = create_new_update(v[i]);
-            			if (v[i].id <= MIN_ID )
+            			console.log("V[i].id " + v[i].id + " MIN " + MIN_ID);
+            			if (v[i].id <= MIN_ID ){
             				$('#verifies').append(el);	
+            				el.fadeIn({
+	    						queue : true,
+	    						duration : "slow"
+	    					});
+            			}
             		}
             	} else {
-            		for( i = v.length -1; i >= 0 ; i--){
+            		for( i = v.length - 1; i >= 0 ; i--){
             			var el = create_new_update(v[i]);
-            		
+            			console.log("V[i].id " + v[i].id + " MAX " + MAX_ID + " MIN " + MIN_ID);
             			if (v[i].id >= MAX_ID)
-            				$('#verifies').prepend(el);	
+            				$('#verifies').prepend(el);
+            				el.fadeIn({
+	    						queue : true,
+	    						duration : "slow"
+	    					});
             		}
             	}
             	
 	    		$("#stub-info-element").remove();
-	    		el.fadeIn({
-	    			queue : true,
-	    			duration : "slow"
-	    		});
+
         	}
         });
 	}
@@ -201,7 +216,7 @@
         // load_new_updates(0);
         $(window).scroll(function() {
 				   if($(window).scrollTop() + $(window).height() == $(document).height()) {
-				       load_new_updates(0, 'pre');
+				       load_new_updates(MIN_ID, 'pre');
 				   }
 			});
 			setInterval(function(){
@@ -307,7 +322,7 @@
 
   	var exampleLoadingFunction = function() {
 			return new Promise( function( resolve, reject ) {
-				load_new_updates(MAX_ID);
+				load_new_updates(MAX_ID, 'post');
 				if (true) {
 						show_success_message();
 				    resolve();
