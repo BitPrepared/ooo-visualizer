@@ -17,3 +17,5 @@ var API_RES_POST = '/feed/';
 // (l'ID verrà messo se necessario direttamente
 // a programma)
 var API_RES_PRE = '/history/';
+
+var API_RES_IMGS = "/resources/";
