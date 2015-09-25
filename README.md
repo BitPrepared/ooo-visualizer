@@ -11,7 +11,6 @@ Per installare il visualizer
  * Copiare il contenuto della cartella (rispettando i path relativi)
  * ```cp config.js.sample config.js```
  * Modificare i parametri dentro ```config.js```
- * 
  
 ## Utilizzo
 
