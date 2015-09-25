@@ -158,9 +158,11 @@
             		
             		/* Inserisci l'update */
             		if(where == 'pre'){
-            			$('#verifies').append(el);	
+            			if (v[i].id <= MIN_ID )
+            				$('#verifies').append(el);	
             		} else {
-            			$('#verifies').prepend(el);	
+            			if (v[i].id >= MAX_ID)
+            				$('#verifies').prepend(el);	
             		}
             		
             		$("#stub-info-element").remove();
